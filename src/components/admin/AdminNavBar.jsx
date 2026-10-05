@@ -10,6 +10,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import ConfirmModal from "../common/ConfirmModal";
 import "./AdminNavbar.css";
 
 const links = [
@@ -21,16 +22,17 @@ const links = [
 
 function AdminNavbar() {
   const [open, setOpen] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
+    setShowLogout(false);
     navigate("/admin/login");
   };
 
   return (
     <>
-      {/* Mobile top bar */}
       <header className="admin-topbar">
         <button
           className="admin-topbar__toggle"
@@ -45,7 +47,6 @@ function AdminNavbar() {
       {open && <div className="admin-overlay" onClick={() => setOpen(false)} />}
 
       <aside className={`admin-sidebar ${open ? "open" : ""}`}>
-        {/* Brand */}
         <div className="admin-sidebar__brand">
           <div className="admin-sidebar__logo">
             <Scissors size={20} />
@@ -63,7 +64,6 @@ function AdminNavbar() {
           </button>
         </div>
 
-        {/* Links */}
         <nav className="admin-sidebar__nav">
           <span className="admin-sidebar__label">Menu</span>
           <ul>
@@ -82,7 +82,6 @@ function AdminNavbar() {
           </ul>
         </nav>
 
-        {/* Footer */}
         <div className="admin-sidebar__footer">
           <div className="admin-sidebar__profile">
             <div className="admin-sidebar__avatar">A</div>
@@ -92,12 +91,30 @@ function AdminNavbar() {
             </div>
           </div>
 
-          <button className="admin-sidebar__logout" onClick={handleLogout}>
+          <button
+            className="admin-sidebar__logout"
+            onClick={() => {
+              console.log("clicked, showLogout will be true");
+              setShowLogout(true);
+            }}
+          >
             <LogOut size={18} />
             <span>Logout</span>
           </button>
         </div>
       </aside>
+
+      <ConfirmModal
+        open={showLogout}
+        icon={<LogOut size={26} />}
+        danger
+        title="Log out?"
+        message="You'll need to sign in again to manage appointments."
+        confirmText="Log out"
+        cancelText="Stay"
+        onConfirm={handleLogout}
+        onCancel={() => setShowLogout(false)}
+      />
     </>
   );
 }
