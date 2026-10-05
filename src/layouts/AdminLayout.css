@@ -1,0 +1,12 @@
+.admin-main {
+  margin-left: var(--sidebar-w);
+  padding: 40px 48px;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .admin-main {
+    margin-left: 0;
+    padding: 80px 16px 24px;
+  }
+}
