@@ -1,0 +1,134 @@
+.appts-header {
+  margin-bottom: 24px;
+}
+
+.appts-header h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.appts-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.appts-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.appts-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.appts-stat span {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.appts-stat strong {
+  display: block;
+  font-size: 2rem;
+  margin-top: 6px;
+}
+
+.appts-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.appts-search {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 14px;
+  color: var(--muted);
+}
+
+.appts-search:focus-within {
+  border-color: var(--gold);
+}
+
+.appts-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 12px 0;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.appts-date {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.appts-date:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.appts-clear {
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.appts-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.appts-tabs button {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.appts-tabs button:hover {
+  color: var(--text);
+}
+
+.appts-tabs button.active {
+  background: var(--sidebar);
+  border-color: var(--sidebar);
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .appts-stats {
+    grid-template-columns: 1fr;
+  }
+}
