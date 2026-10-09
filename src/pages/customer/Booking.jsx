@@ -1,20 +1,40 @@
 import { useState } from "react";
 import { services, peso } from "./Services";
+import { addAppointment, isSlotTaken } from "../../data/appointmentStore";
 
-const times = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"];
+const times = [];
+for (let h = 10; h < 20; h++) {
+  times.push(`${String(h).padStart(2, "0")}:00`, `${String(h).padStart(2, "0")}:30`);
+}
 const initial = { service: "", date: "", time: "", name: "", phone: "" };
 
 export default function Booking() {
   const [form, setForm] = useState(initial);
   const [booked, setBooked] = useState(null);
+  const [error, setError] = useState("");
 
   const today = new Date().toISOString().split("T")[0];
-  const update = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const update = (e) => {
+    setError("");
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const submit = (e) => {
     e.preventDefault();
-    // TODO: send `form` to your API here
-    setBooked({ ...form, service: services.find((s) => s.id === form.service) });
+    if (isSlotTaken(form.date, form.time)) {
+      setError("That time is already booked. Please choose another time.");
+      return;
+    }
+    const service = services.find((s) => s.id === form.service);
+    const saved = addAppointment({
+      name: form.name,
+      phone: form.phone,
+      service: service.name,
+      price: service.price,
+      date: form.date,
+      time: form.time,
+    });
+    setBooked(saved);
     setForm(initial);
   };
 
@@ -25,8 +45,8 @@ export default function Booking() {
         <div className="notice" role="status">
           <h2>You're booked, {booked.name}</h2>
           <p>
-            {booked.service.name} ({peso(booked.service.price)}) on {booked.date} at {booked.time}.
-            We'll text {booked.phone} if anything changes.
+            {booked.service} ({peso(booked.price)}) on {booked.date} at {booked.time}.
+            Please arrive 5 minutes early.
           </p>
           <button className="btn btn--ghost" onClick={() => setBooked(null)}>Book another</button>
         </div>
@@ -73,6 +93,7 @@ export default function Booking() {
           <input id="phone" name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={update} required />
         </div>
 
+        {error && <p role="alert" style={{ color: "var(--gold)", margin: 0 }}>{error}</p>}
         <button type="submit" className="btn">Confirm booking</button>
       </form>
     </section>

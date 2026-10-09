@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
 export const services = [
-  { id: "haircut", name: "Haircut", price: 250, minutes: 30, desc: "Cut, wash, and style." },
-  { id: "fade", name: "Skin fade", price: 300, minutes: 45, desc: "Clean fade with detailed edging." },
-  { id: "shave", name: "Hot towel shave", price: 200, minutes: 30, desc: "Straight-razor shave with a warm towel finish." },
-  { id: "beard", name: "Beard trim", price: 150, minutes: 20, desc: "Shape and line-up." },
-  { id: "combo", name: "Cut and beard", price: 380, minutes: 60, desc: "Any haircut plus a beard trim." },
+  { id: "haircut", name: "Haircut", price: 150, desc: "Cut, wash, and style." },
+  { id: "shave", name: "Shave", price: 100, desc: "Clean shave with a warm towel finish." },
+  { id: "beard", name: "Beard Trim", price: 120, desc: "Shape and line-up." },
+  { id: "combo", name: "Haircut + Beard Trim", price: 250, desc: "Any haircut plus a beard trim." },
+  { id: "color", name: "Hair Color", price: 600, desc: "Single-color treatment." },
 ];
 
 export const peso = (n) => `₱${n.toLocaleString()}`;
