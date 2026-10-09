@@ -1,36 +1,35 @@
 import { sampleAppointments } from "./sampleAppointments";
 
-const KEY = "barbershop_appointments";
+// Customer bookings are added straight into the admin's own
+// `sampleAppointments` list, so the admin pages see them without any change.
+// They are also saved in localStorage so they survive a page reload.
+const KEY = "barbershop_customer_bookings";
 
-// Read all appointments (seeds the sample data the first time).
-export function getAppointments() {
+function readSaved() {
   try {
-    const saved = localStorage.getItem(KEY);
-    if (saved) return JSON.parse(saved);
+    return JSON.parse(localStorage.getItem(KEY)) || [];
   } catch {
-    /* ignore and fall back to sample data */
+    return [];
   }
-  saveAppointments(sampleAppointments);
-  return sampleAppointments;
 }
 
-// Save the full list (the admin calls this after changing a status).
-export function saveAppointments(list) {
-  localStorage.setItem(KEY, JSON.stringify(list));
-}
+// Runs once when the app starts: put saved bookings back into the admin list.
+readSaved().forEach((a) => {
+  if (!sampleAppointments.some((x) => x.id === a.id)) sampleAppointments.push(a);
+});
 
-// Add a booking from the customer page. Same fields the admin already uses.
+// Add a booking from the customer page (same fields the admin uses).
 export function addAppointment({ name, phone, service, price, date, time }) {
-  const list = getAppointments();
-  const id = list.reduce((max, a) => Math.max(max, a.id), 0) + 1;
+  const id = sampleAppointments.reduce((max, a) => Math.max(max, a.id), 0) + 1;
   const appointment = { id, name, phone, service, price, date, time, status: "booked" };
-  saveAppointments([...list, appointment]);
+  sampleAppointments.push(appointment);
+  localStorage.setItem(KEY, JSON.stringify([...readSaved(), appointment]));
   return appointment;
 }
 
 // True if that date and time is already taken by a non-cancelled booking.
 export function isSlotTaken(date, time) {
-  return getAppointments().some(
+  return sampleAppointments.some(
     (a) => a.date === date && a.time === time && a.status !== "cancelled"
   );
 }

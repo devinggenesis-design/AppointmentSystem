@@ -14,6 +14,7 @@ import Homepage from "./pages/customer/Homepage";
 import Services from "./pages/customer/Services";
 import Booking from "./pages/customer/Booking";
 import Contacts from "./pages/customer/Contacts";
+import "./data/appointmentStore";
 
 function App() {
   return (
