@@ -17,7 +17,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--muted);
-  background: #faf9f6;
+  background: var(--surface-2);
   padding: 14px 20px;
   border-bottom: 1px solid var(--border);
 }
@@ -34,7 +34,7 @@
 }
 
 .appt-table tbody tr:hover {
-  background: #fcfbf9;
+  background: var(--surface-2);
 }
 
 .appt-customer {

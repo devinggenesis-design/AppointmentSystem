@@ -1,0 +1,140 @@
+/* Dark background only */
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #0f0f10;
+}
+
+/* Light card */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  border: 1px solid #e6e2da;
+  border-radius: 18px;
+  padding: 40px 32px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  color: #1c1c1e;
+}
+
+.login-logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 16px;
+  background: #c9a227;
+  color: #161616;
+  display: grid;
+  place-items: center;
+}
+
+.login-title {
+  text-align: center;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.8rem;
+  margin: 0 0 4px;
+  color: #1c1c1e;
+}
+
+.login-subtitle {
+  text-align: center;
+  margin: 0 0 24px;
+  color: #7a7a80;
+  font-size: 0.92rem;
+}
+
+.login-error {
+  background: rgba(224, 85, 85, 0.1);
+  border: 1px solid rgba(224, 85, 85, 0.3);
+  color: #e05555;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+}
+
+.login-field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.login-field > span {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #1c1c1e;
+}
+
+.login-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #e6e2da;
+  border-radius: 10px;
+  padding: 0 14px;
+  color: #7a7a80;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.login-input:focus-within {
+  border-color: #c9a227;
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.14);
+}
+
+.login-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 13px 0;
+  font-size: 0.95rem;
+  color: #1c1c1e;
+}
+
+.login-input input::placeholder {
+  color: #9a9aa0;
+}
+
+.login-eye {
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  color: #7a7a80;
+  cursor: pointer;
+  padding: 0;
+}
+
+.login-eye:hover {
+  color: #1c1c1e;
+}
+
+.login-submit {
+  width: 100%;
+  margin-top: 8px;
+  padding: 13px;
+  background: #c9a227;
+  color: #161616;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    filter 0.2s,
+    transform 0.1s;
+}
+
+.login-submit:hover {
+  filter: brightness(0.95);
+}
+
+.login-submit:active {
+  transform: scale(0.99);
+}
