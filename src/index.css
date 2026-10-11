@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap");
 
 :root {
+  color-scheme: light;
+
   --bg: #f4f2ee;
   --surface: #ffffff;
   --text: #1c1c1e;
@@ -42,6 +44,7 @@ h1,
 h2,
 h3 {
   margin: 0 0 12px;
+  color: var(--text);
   letter-spacing: -0.01em;
 }
 

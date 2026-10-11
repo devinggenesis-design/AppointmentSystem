@@ -1,0 +1,609 @@
+.sched-page {
+  --bg: #f4f2ee;
+  --surface: #ffffff;
+  --text: #1c1c1e;
+  --muted: #7a7a80;
+  --border: #e6e2da;
+  --gold: #c9a227;
+  --gold-soft: rgba(201, 162, 39, 0.14);
+  --danger: #e05555;
+  --sidebar: #161616;
+
+  color: var(--text);
+  color-scheme: light;
+}
+
+.sched-page h1,
+.sched-page h2,
+.sched-page h3,
+.sched-page strong,
+.sched-page label {
+  color: var(--text);
+}
+
+.sched-page input,
+.sched-page select {
+  color: #1c1c1e;
+  background: #ffffff;
+}
+
+.sched-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sched-header h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.sched-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.sched-header__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.sched-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    filter 0.2s,
+    background 0.2s;
+}
+
+.sched-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sched-btn--primary,
+.sched-btn--gold {
+  background: var(--gold);
+  color: #161616;
+}
+
+.sched-btn--primary:not(:disabled):hover,
+.sched-btn--gold:hover {
+  filter: brightness(0.93);
+}
+
+.sched-btn--ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.sched-btn--ghost:hover {
+  background: #f4f2ee;
+}
+
+.sched-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.sched-alert--error {
+  background: rgba(224, 85, 85, 0.1);
+  border: 1px solid rgba(224, 85, 85, 0.3);
+  color: var(--danger);
+}
+
+.sched-alert--success {
+  background: rgba(46, 160, 100, 0.12);
+  border: 1px solid rgba(46, 160, 100, 0.3);
+  color: #1f8a52;
+}
+
+.sched-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.sched-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sched-card__head h2 {
+  font-size: 1.15rem;
+  margin: 0 0 4px;
+}
+
+.sched-card__head span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.sched-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sched-slot span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sched-slot select,
+.sched-day__times input,
+.sched-add input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.sched-slot select:focus,
+.sched-day__times input:focus,
+.sched-add input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+.sched-days {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sched-day {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.sched-day:last-child {
+  border-bottom: none;
+}
+
+.sched-day__name {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sched-day.is-closed .sched-day__name strong {
+  color: var(--muted);
+}
+
+.sched-day__times {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sched-day__times span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.sched-day__times em {
+  margin-left: 6px;
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #8f7314;
+  background: var(--gold-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.sched-day__closed {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.sched-switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.sched-switch input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.sched-switch__track {
+  position: absolute;
+  inset: 0;
+  background: #d6d2c9;
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+
+.sched-switch__track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.sched-switch input:checked + .sched-switch__track {
+  background: var(--gold);
+}
+
+.sched-switch input:checked + .sched-switch__track::after {
+  transform: translateX(18px);
+}
+
+.sched-switch input:focus-visible + .sched-switch__track {
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+/* Days off */
+.sched-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sched-add input[type="text"] {
+  flex: 1;
+  min-width: 200px;
+}
+
+.sched-off {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sched-off li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.sched-off li:last-child {
+  margin-bottom: 0;
+}
+
+.sched-off strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.sched-off span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.sched-remove {
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  color: var(--muted);
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.sched-remove:hover {
+  background: rgba(224, 85, 85, 0.12);
+  color: var(--danger);
+}
+
+.sched-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 0 8px;
+  color: var(--muted);
+}
+
+.sched-empty p {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .sched-card {
+    padding: 18px;
+  }
+
+  .sched-day {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .sched-header__actions {
+    width: 100%;
+  }
+
+  .sched-header__actions .sched-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+.sched-tabs {
+  display: inline-flex;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 5px;
+  margin-bottom: 24px;
+}
+
+.sched-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.sched-tabs button:hover {
+  color: var(--text);
+}
+
+.sched-tabs button.active {
+  background: var(--sidebar);
+  color: #fff;
+}
+
+.sched-tabs__count {
+  background: var(--gold);
+  color: #161616;
+  font-size: 0.72rem;
+  padding: 1px 8px;
+  border-radius: 999px;
+}
+
+.sched-emp {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.sched-emp__list {
+  margin-bottom: 0;
+}
+
+.sched-emp__list h2 {
+  font-size: 1.15rem;
+  margin: 0 0 14px;
+}
+
+.sched-emp__list ul {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sched-emp__list li button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.sched-emp__list li button:hover {
+  background: #f4f2ee;
+}
+
+.sched-emp__list li button.active {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+}
+
+.sched-emp__avatar {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--sidebar);
+  color: var(--gold);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.sched-emp__avatar--lg {
+  width: 48px;
+  height: 48px;
+  font-size: 1.1rem;
+}
+
+.sched-emp__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sched-emp__info strong {
+  font-size: 0.92rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sched-emp__info small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.sched-emp__hint {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin: 0 0 20px;
+}
+
+.sched-emp__form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.sched-emp__form input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.sched-emp__form input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+.sched-emp__form .sched-btn {
+  justify-content: center;
+}
+
+.sched-emp__title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sched-emp__title h2 {
+  margin: 0 0 2px;
+}
+
+.sched-emp__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sched-btn--danger {
+  background: transparent;
+  border-color: rgba(224, 85, 85, 0.35);
+  color: var(--danger);
+}
+
+.sched-btn--danger:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.sched-inline-error {
+  color: var(--danger);
+  font-size: 0.84rem;
+  margin-bottom: 12px;
+}
+
+.sched-emp__form .sched-inline-error {
+  margin-bottom: 0;
+}
+
+.sched-empty--big {
+  padding: 56px 24px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .sched-emp {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .sched-tabs {
+    display: flex;
+  }
+
+  .sched-tabs button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .sched-emp__actions .sched-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}

@@ -13,6 +13,7 @@ const FILTERS = [
 ];
 
 function Appointments() {
+  "use no memo";
   const [appointments, setAppointments] = useState(sampleAppointments);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
@@ -56,7 +57,7 @@ function Appointments() {
   };
 
   return (
-    <div>
+    <div className="appts-page">
       <div className="appts-header">
         <h1>Appointments</h1>
         <p>Manage your customers' bookings.</p>

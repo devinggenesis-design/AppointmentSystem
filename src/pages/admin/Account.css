@@ -1,0 +1,283 @@
+.account-page {
+  --bg: #f4f2ee;
+  --surface: #ffffff;
+  --text: #1c1c1e;
+  --muted: #7a7a80;
+  --border: #e6e2da;
+  --gold: #c9a227;
+  --gold-soft: rgba(201, 162, 39, 0.14);
+  --danger: #e05555;
+  --sidebar: #161616;
+
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+  color: var(--text);
+  color-scheme: light;
+}
+
+.acct-header,
+.acct-summary {
+  grid-column: 1 / -1;
+}
+
+.account-page h1,
+.account-page h2,
+.account-page strong,
+.account-page label {
+  color: var(--text);
+}
+
+.acct-header {
+  margin-bottom: 24px;
+}
+
+.acct-header h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.acct-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.acct-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.acct-card__head {
+  margin-bottom: 20px;
+}
+
+.acct-card__head h2 {
+  font-size: 1.15rem;
+  margin: 0 0 4px;
+}
+
+.acct-card__head span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.acct-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.acct-summary h2 {
+  margin: 0 0 2px;
+  font-size: 1.2rem;
+}
+
+.acct-summary span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.acct-avatar {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--sidebar);
+  color: var(--gold);
+  font-size: 1.6rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.acct-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.acct-field--full {
+  grid-column: 1 / -1;
+}
+
+.acct-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.acct-field {
+  display: block;
+}
+
+.acct-field > span {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.acct-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 14px;
+  color: var(--muted);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.acct-input:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+.acct-input input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 12px 0;
+  font-size: 0.93rem;
+  color: #1c1c1e;
+}
+
+.acct-input input::placeholder {
+  color: #a3a3a8;
+}
+
+.acct-eye {
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+}
+
+.acct-eye:hover {
+  color: var(--text);
+}
+
+.acct-strength {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: -6px;
+}
+
+.acct-strength__bars {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.acct-strength__bars i {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.acct-strength__bars i.on.level-1 {
+  background: #e05555;
+}
+.acct-strength__bars i.on.level-2 {
+  background: #e08a3c;
+}
+.acct-strength__bars i.on.level-3 {
+  background: #c9a227;
+}
+.acct-strength__bars i.on.level-4 {
+  background: #2ea064;
+}
+
+.acct-strength small {
+  min-width: 64px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.acct-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+.acct-alert--error {
+  background: rgba(224, 85, 85, 0.1);
+  border: 1px solid rgba(224, 85, 85, 0.3);
+  color: var(--danger);
+}
+
+.acct-alert--success {
+  background: rgba(46, 160, 100, 0.12);
+  border: 1px solid rgba(46, 160, 100, 0.3);
+  color: #1f8a52;
+}
+
+.acct-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+
+.acct-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: filter 0.2s;
+}
+
+.acct-btn--primary {
+  background: var(--gold);
+  color: #161616;
+}
+
+.acct-btn--primary:not(:disabled):hover {
+  filter: brightness(0.93);
+}
+
+.acct-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .acct-card {
+    padding: 18px;
+  }
+
+  .acct-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .acct-actions .acct-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
