@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   User,
   Mail,
@@ -11,27 +11,10 @@ import {
   Save,
   Check,
 } from "lucide-react";
+import authFetch from "../../utils/authFetch";
 import "./Account.css";
 
-const STORAGE_KEY = "adminAccount";
-
-const DEFAULT_ACCOUNT = {
-  name: "Admin",
-  shopName: "Barbershop",
-  username: "admin",
-  email: "",
-  phone: "",
-  password: "admin123",
-};
-
-const loadAccount = () => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return { ...DEFAULT_ACCOUNT, ...(saved || {}) };
-  } catch {
-    return { ...DEFAULT_ACCOUNT };
-  }
-};
+const EMPTY = { name: "", shopName: "", username: "", email: "", phone: "" };
 
 const getStrength = (pw) => {
   let score = 0;
@@ -39,7 +22,7 @@ const getStrength = (pw) => {
   if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
   if (/\d/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
-  return score;
+  return score; // 0 to 4
 };
 
 const STRENGTH_LABEL = ["Too short", "Weak", "Fair", "Good", "Strong"];
@@ -47,22 +30,50 @@ const STRENGTH_LABEL = ["Too short", "Weak", "Fair", "Good", "Strong"];
 function Account() {
   "use no memo";
 
-  const [account, setAccount] = useState(loadAccount);
+  const [account, setAccount] = useState(EMPTY); // last saved version
+  const [profile, setProfile] = useState(EMPTY); // what's in the form
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
-  const [profile, setProfile] = useState(() => {
-    const a = loadAccount();
-    return {
-      name: a.name,
-      shopName: a.shopName,
-      username: a.username,
-      email: a.email,
-      phone: a.phone,
+  /* ---------- Load from the database ---------- */
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      try {
+        const res = await authFetch("/api/auth/me");
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        if (!active) return;
+
+        const info = {
+          name: data.name || "",
+          shopName: data.shopName || "",
+          username: data.username || "",
+          email: data.email || "",
+          phone: data.phone || "",
+        };
+        setAccount(info);
+        setProfile(info);
+      } catch {
+        if (active)
+          setLoadError("Couldn't load your account. Is the server running?");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+
+    return () => {
+      active = false;
     };
-  });
+  }, []);
+
+  /* ---------- Profile ---------- */
   const [profileError, setProfileError] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);
+  const [profileBusy, setProfileBusy] = useState(false);
 
-  const profileChanged = Object.keys(profile).some(
+  const profileChanged = Object.keys(EMPTY).some(
     (k) => profile[k] !== account[k],
   );
 
@@ -72,42 +83,53 @@ function Account() {
     setProfileSaved(false);
   };
 
-  const saveProfile = (e) => {
+  const saveProfile = async (e) => {
     e.preventDefault();
 
-    if (!profile.name.trim()) {
-      setProfileError("Please enter your name.");
-      return;
-    }
-    if (!profile.shopName.trim()) {
-      setProfileError("Please enter the shop name.");
-      return;
-    }
-    if (profile.username.trim().length < 3) {
-      setProfileError("Username must be at least 3 characters.");
-      return;
-    }
-    if (profile.email && !/^\S+@\S+\.\S+$/.test(profile.email)) {
-      setProfileError("Please enter a valid email address.");
-      return;
-    }
+    if (!profile.name.trim()) return setProfileError("Please enter your name.");
+    if (!profile.shopName.trim())
+      return setProfileError("Please enter the shop name.");
+    if (profile.username.trim().length < 3)
+      return setProfileError("Username must be at least 3 characters.");
+    if (profile.email && !/^\S+@\S+\.\S+$/.test(profile.email))
+      return setProfileError("Please enter a valid email address.");
 
-    const cleaned = {
-      name: profile.name.trim(),
-      shopName: profile.shopName.trim(),
-      username: profile.username.trim(),
-      email: profile.email.trim(),
-      phone: profile.phone.trim(),
-    };
+    setProfileBusy(true);
+    try {
+      const res = await authFetch("/api/auth/profile", {
+        method: "PUT",
+        body: JSON.stringify(profile),
+      });
+      const data = await res.json();
 
-    const updated = { ...account, ...cleaned };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    setAccount(updated);
-    setProfile(cleaned);
-    setProfileError("");
-    setProfileSaved(true);
+      if (!res.ok) {
+        setProfileError(data.message || "Couldn't save your profile.");
+        return;
+      }
+
+      const info = {
+        name: data.name,
+        shopName: data.shopName,
+        username: data.username,
+        email: data.email,
+        phone: data.phone,
+      };
+      setAccount(info);
+      setProfile(info);
+      setProfileError("");
+      setProfileSaved(true);
+
+      // Keep the sidebar in sync
+      localStorage.setItem("adminInfo", JSON.stringify(data));
+      window.dispatchEvent(new Event("adminInfoChanged"));
+    } catch {
+      setProfileError("Can't reach the server. Is it running?");
+    } finally {
+      setProfileBusy(false);
+    }
   };
 
+  /* ---------- Password ---------- */
   const [pw, setPw] = useState({ current: "", next: "", confirm: "" });
   const [show, setShow] = useState({
     current: false,
@@ -116,6 +138,7 @@ function Account() {
   });
   const [pwError, setPwError] = useState("");
   const [pwSaved, setPwSaved] = useState(false);
+  const [pwBusy, setPwBusy] = useState(false);
 
   const strength = getStrength(pw.next);
 
@@ -128,38 +151,45 @@ function Account() {
   const toggleShow = (field) =>
     setShow((prev) => ({ ...prev, [field]: !prev[field] }));
 
-  const savePassword = (e) => {
+  const savePassword = async (e) => {
     e.preventDefault();
 
-    if (!pw.current || !pw.next || !pw.confirm) {
-      setPwError("Please fill in all password fields.");
-      return;
-    }
-    if (pw.current !== account.password) {
-      setPwError("Your current password is incorrect.");
-      return;
-    }
-    if (pw.next.length < 8) {
-      setPwError("New password must be at least 8 characters.");
-      return;
-    }
-    if (pw.next === pw.current) {
-      setPwError("New password must be different from the current one.");
-      return;
-    }
-    if (pw.next !== pw.confirm) {
-      setPwError("New password and confirmation don't match.");
-      return;
-    }
+    if (!pw.current || !pw.next || !pw.confirm)
+      return setPwError("Please fill in all password fields.");
+    if (pw.next.length < 8)
+      return setPwError("New password must be at least 8 characters.");
+    if (pw.next === pw.current)
+      return setPwError("New password must be different from the current one.");
+    if (pw.next !== pw.confirm)
+      return setPwError("New password and confirmation don't match.");
 
-    const updated = { ...account, password: pw.next };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    setAccount(updated);
-    setPw({ current: "", next: "", confirm: "" });
-    setPwError("");
-    setPwSaved(true);
+    setPwBusy(true);
+    try {
+      const res = await authFetch("/api/auth/password", {
+        method: "PUT",
+        body: JSON.stringify({
+          currentPassword: pw.current,
+          newPassword: pw.next,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setPwError(data.message || "Couldn't change your password.");
+        return;
+      }
+
+      setPw({ current: "", next: "", confirm: "" });
+      setPwError("");
+      setPwSaved(true);
+    } catch {
+      setPwError("Can't reach the server. Is it running?");
+    } finally {
+      setPwBusy(false);
+    }
   };
 
+  /* ---------- Password input helper ---------- */
   const passwordField = (field, label, placeholder, autoComplete) => (
     <label className="acct-field">
       <span>{label}</span>
@@ -184,6 +214,25 @@ function Account() {
     </label>
   );
 
+  /* ---------- Render ---------- */
+  if (loading) {
+    return (
+      <div className="account-page">
+        <div className="acct-card acct-loading">Loading your account...</div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="account-page">
+        <div className="acct-card">
+          <div className="acct-alert acct-alert--error">{loadError}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="account-page">
       <div className="acct-header">
@@ -191,6 +240,7 @@ function Account() {
         <p>Manage your profile and password.</p>
       </div>
 
+      {/* Summary */}
       <section className="acct-card acct-summary">
         <div className="acct-avatar">
           {(account.name || "A").charAt(0).toUpperCase()}
@@ -203,6 +253,7 @@ function Account() {
         </div>
       </section>
 
+      {/* Profile */}
       <form className="acct-card" onSubmit={saveProfile}>
         <div className="acct-card__head">
           <h2>Profile</h2>
@@ -290,13 +341,14 @@ function Account() {
           <button
             type="submit"
             className="acct-btn acct-btn--primary"
-            disabled={!profileChanged}
+            disabled={!profileChanged || profileBusy}
           >
-            <Save size={16} /> Save profile
+            <Save size={16} /> {profileBusy ? "Saving..." : "Save profile"}
           </button>
         </div>
       </form>
 
+      {/* Password */}
       <form className="acct-card" onSubmit={savePassword}>
         <div className="acct-card__head">
           <h2>Change password</h2>
@@ -349,8 +401,12 @@ function Account() {
         </div>
 
         <div className="acct-actions">
-          <button type="submit" className="acct-btn acct-btn--primary">
-            <Lock size={16} /> Update password
+          <button
+            type="submit"
+            className="acct-btn acct-btn--primary"
+            disabled={pwBusy}
+          >
+            <Lock size={16} /> {pwBusy ? "Updating..." : "Update password"}
           </button>
         </div>
       </form>

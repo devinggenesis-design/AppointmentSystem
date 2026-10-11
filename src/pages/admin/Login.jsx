@@ -3,20 +3,19 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { Scissors, User, Lock, Eye, EyeOff } from "lucide-react";
 import "./Login.css";
 
-const ADMIN = { username: "admin", password: "admin123" };
-
 function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (localStorage.getItem("adminToken")) {
     return <Navigate to="/admin/dashboard" replace />;
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!username.trim() || !password) {
@@ -24,11 +23,27 @@ function Login() {
       return;
     }
 
-    if (username.trim() === ADMIN.username && password === ADMIN.password) {
-      localStorage.setItem("adminToken", "logged-in");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username.trim(), password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Login failed.");
+        return;
+      }
+
+      localStorage.setItem("adminToken", data.token);
+      localStorage.setItem("adminInfo", JSON.stringify(data.admin));
       navigate("/admin/dashboard");
-    } else {
-      setError("Incorrect username or password.");
+    } catch {
+      setError("Can't reach the server. Is it running?");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,8 +102,8 @@ function Login() {
           </div>
         </label>
 
-        <button type="submit" className="login-submit">
-          Sign in
+        <button type="submit" className="login-submit" disabled={loading}>
+          {loading ? "Signing in..." : "Sign in"}
         </button>
       </form>
     </div>

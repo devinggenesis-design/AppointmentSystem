@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CalendarOff,
   Plus,
@@ -11,9 +11,8 @@ import {
   UserPlus,
 } from "lucide-react";
 import ConfirmModal from "../../components/common/ConfirmModal";
+import authFetch from "../../utils/authFetch";
 import "./Schedules.css";
-
-const STORAGE_KEY = "shopSchedule";
 
 const DAYS = [
   { key: "monday", label: "Monday" },
@@ -48,6 +47,7 @@ const DEFAULT_SCHEDULE = {
   employees: [],
 };
 
+/* ---------- Helpers ---------- */
 const clone = (obj) => JSON.parse(JSON.stringify(obj));
 
 const toMinutes = (t) => {
@@ -86,15 +86,24 @@ const findInvalidDay = (hours, owner) => {
     : "";
 };
 
-const loadSchedule = () => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return saved ? { ...DEFAULT_SCHEDULE, ...saved } : clone(DEFAULT_SCHEDULE);
-  } catch {
-    return clone(DEFAULT_SCHEDULE);
-  }
+// Fills in anything missing, so empty or partial data from the server can't crash the page
+const normalize = (data) => {
+  const defaults = clone(DEFAULT_SCHEDULE);
+  return {
+    slotMinutes: data?.slotMinutes || defaults.slotMinutes,
+    hours: { ...defaults.hours, ...(data?.hours || {}) },
+    daysOff: Array.isArray(data?.daysOff) ? data.daysOff : [],
+    employees: Array.isArray(data?.employees)
+      ? data.employees.map((e) => ({
+          ...e,
+          hours: { ...defaults.hours, ...(e.hours || {}) },
+          daysOff: Array.isArray(e.daysOff) ? e.daysOff : [],
+        }))
+      : [],
+  };
 };
 
+/* ---------- Reusable: weekly hours ---------- */
 function WeeklyHours({ hours, slotMinutes, onChange }) {
   return (
     <ul className="sched-days">
@@ -141,6 +150,7 @@ function WeeklyHours({ hours, slotMinutes, onChange }) {
   );
 }
 
+/* ---------- Reusable: days off ---------- */
 function DaysOff({ daysOff, onAdd, onRemove }) {
   const [date, setDate] = useState("");
   const [reason, setReason] = useState("");
@@ -217,13 +227,18 @@ function DaysOff({ daysOff, onAdd, onRemove }) {
   );
 }
 
+/* ---------- Page ---------- */
 function Schedules() {
   "use no memo";
 
-  const [schedule, setSchedule] = useState(loadSchedule);
+  const [schedule, setSchedule] = useState(() => clone(DEFAULT_SCHEDULE));
   const [savedSnapshot, setSavedSnapshot] = useState(() =>
-    JSON.stringify(loadSchedule()),
+    JSON.stringify(DEFAULT_SCHEDULE),
   );
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [saving, setSaving] = useState(false);
+
   const [view, setView] = useState("shop");
   const [selectedId, setSelectedId] = useState(null);
   const [empName, setEmpName] = useState("");
@@ -233,6 +248,31 @@ function Schedules() {
   const [error, setError] = useState("");
   const [justSaved, setJustSaved] = useState(false);
 
+  /* ----- Load from the database ----- */
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      try {
+        const res = await authFetch("/api/schedule");
+        if (!res.ok) throw new Error();
+        const data = normalize(await res.json());
+        if (!active) return;
+        setSchedule(data);
+        setSavedSnapshot(JSON.stringify(data));
+      } catch {
+        if (active)
+          setLoadError("Couldn't load the schedule. Is the server running?");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const hasChanges = JSON.stringify(schedule) !== savedSnapshot;
 
   const selected =
@@ -240,12 +280,14 @@ function Schedules() {
     schedule.employees[0] ||
     null;
 
+  // Any edit goes through here: clears messages and updates the schedule
   const change = (fn) => {
     setJustSaved(false);
     setError("");
     setSchedule(fn);
   };
 
+  /* ----- Shop ----- */
   const updateShopDay = (key, changes) =>
     change((prev) => ({
       ...prev,
@@ -264,6 +306,7 @@ function Schedules() {
       daysOff: prev.daysOff.filter((d) => d.id !== id),
     }));
 
+  /* ----- Employees ----- */
   const updateEmployee = (id, fn) =>
     change((prev) => ({
       ...prev,
@@ -289,7 +332,7 @@ function Schedules() {
       id: Date.now(),
       name,
       role: empRole.trim() || "Barber",
-      hours: clone(schedule.hours),
+      hours: clone(schedule.hours), // starts with the shop's hours
       daysOff: [],
     };
 
@@ -301,21 +344,26 @@ function Schedules() {
   };
 
   const confirmRemoveEmployee = () => {
+    if (!toRemove) return;
+    const id = toRemove.id;
     change((prev) => ({
       ...prev,
-      employees: prev.employees.filter((e) => e.id !== toRemove.id),
+      employees: prev.employees.filter((e) => e.id !== id),
     }));
-    if (selectedId === toRemove.id) setSelectedId(null);
+    if (selectedId === id) setSelectedId(null);
     setToRemove(null);
   };
 
-  const copyShopHours = () =>
+  const copyShopHours = () => {
+    if (!selected) return;
     updateEmployee(selected.id, (e) => ({
       ...e,
       hours: clone(schedule.hours),
     }));
+  };
 
-  const handleSave = () => {
+  /* ----- Save / discard ----- */
+  const handleSave = async () => {
     const shopError = findInvalidDay(schedule.hours, "Shop");
     if (shopError) {
       setError(shopError);
@@ -329,10 +377,27 @@ function Schedules() {
       }
     }
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
-    setSavedSnapshot(JSON.stringify(schedule));
-    setError("");
-    setJustSaved(true);
+    setSaving(true);
+    try {
+      const res = await authFetch("/api/schedule", {
+        method: "PUT",
+        body: JSON.stringify(schedule),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Couldn't save the schedule.");
+        return;
+      }
+
+      setSavedSnapshot(JSON.stringify(schedule));
+      setError("");
+      setJustSaved(true);
+    } catch {
+      setError("Can't reach the server. Is it running?");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDiscard = () => {
@@ -340,6 +405,25 @@ function Schedules() {
     setError("");
     setJustSaved(false);
   };
+
+  /* ----- Loading / error screens (must stay AFTER all hooks) ----- */
+  if (loading) {
+    return (
+      <div className="sched-page">
+        <div className="sched-card sched-empty sched-empty--big">
+          <p>Loading schedule...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="sched-page">
+        <div className="sched-alert sched-alert--error">{loadError}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="sched-page">
@@ -354,6 +438,7 @@ function Schedules() {
             <button
               className="sched-btn sched-btn--ghost"
               onClick={handleDiscard}
+              disabled={saving}
             >
               Discard
             </button>
@@ -361,9 +446,9 @@ function Schedules() {
           <button
             className="sched-btn sched-btn--primary"
             onClick={handleSave}
-            disabled={!hasChanges}
+            disabled={!hasChanges || saving}
           >
-            <Save size={16} /> Save changes
+            <Save size={16} /> {saving ? "Saving..." : "Save changes"}
           </button>
         </div>
       </div>
@@ -375,6 +460,7 @@ function Schedules() {
         </div>
       )}
 
+      {/* Tabs */}
       <div className="sched-tabs">
         <button
           className={view === "shop" ? "active" : ""}
@@ -391,6 +477,7 @@ function Schedules() {
         </button>
       </div>
 
+      {/* ================= SHOP ================= */}
       {view === "shop" && (
         <>
           <section className="sched-card">
@@ -439,6 +526,7 @@ function Schedules() {
         </>
       )}
 
+      {/* ================= EMPLOYEES ================= */}
       {view === "employees" && (
         <div className="sched-emp">
           <aside className="sched-card sched-emp__list">
@@ -581,6 +669,7 @@ function Schedules() {
         </div>
       )}
 
+      {/* Remove employee confirmation */}
       <ConfirmModal
         open={!!toRemove}
         danger

@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   CalendarCheck,
@@ -20,6 +20,14 @@ const links = [
   { to: "/admin/account", label: "Account", icon: UserCog },
 ];
 
+const readAdmin = () => {
+  try {
+    return JSON.parse(localStorage.getItem("adminInfo")) || {};
+  } catch {
+    return {};
+  }
+};
+
 function AdminNavbar() {
   const [open, setOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
@@ -30,6 +38,14 @@ function AdminNavbar() {
     setShowLogout(false);
     navigate("/admin/login");
   };
+
+  const [admin, setAdmin] = useState(readAdmin);
+
+  useEffect(() => {
+    const refresh = () => setAdmin(readAdmin());
+    window.addEventListener("adminInfoChanged", refresh);
+    return () => window.removeEventListener("adminInfoChanged", refresh);
+  }, []);
 
   return (
     <>
@@ -84,13 +100,19 @@ function AdminNavbar() {
 
         <div className="admin-sidebar__footer">
           <div className="admin-sidebar__profile">
-            <div className="admin-sidebar__avatar">A</div>
+            <div className="admin-sidebar__avatar">
+              {(admin.name || "A").charAt(0).toUpperCase()}
+            </div>
             <div>
-              <div className="admin-sidebar__profile-name">Admin</div>
+              <div className="admin-sidebar__profile-name">
+                {admin.name || "Admin"}
+              </div>
               <div className="admin-sidebar__profile-role">Shop Owner</div>
             </div>
           </div>
-
+          <div className="admin-sidebar__name">
+            {admin.shopName || "Barbershop"}
+          </div>
           <button
             className="admin-sidebar__logout"
             onClick={() => {
