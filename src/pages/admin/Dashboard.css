@@ -1,0 +1,360 @@
+.dash-page {
+  --surface: #ffffff;
+  --text: #1c1c1e;
+  --muted: #7a7a80;
+  --border: #e6e2da;
+  --gold: #c9a227;
+  --gold-soft: rgba(201, 162, 39, 0.14);
+  --danger: #e05555;
+  --sidebar: #161616;
+
+  width: 100%;
+  color: var(--text);
+  color-scheme: light;
+}
+
+.dash-page h1,
+.dash-page h2,
+.dash-page strong {
+  color: var(--text);
+}
+
+/* Header */
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dash-header h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.dash-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.dash-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dash-btn:hover {
+  background: #f4f2ee;
+}
+
+.dash-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spin {
+  animation: dash-spin 0.8s linear infinite;
+}
+
+@keyframes dash-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dash-alert {
+  background: rgba(224, 85, 85, 0.1);
+  border: 1px solid rgba(224, 85, 85, 0.3);
+  color: var(--danger);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+/* Cards */
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.dash-center {
+  text-align: center;
+  color: var(--muted);
+  padding: 48px 24px;
+}
+
+.dash-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dash-card__head h2 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.dash-card__head > span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Stats */
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dash-stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dash-stat__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--gold-soft);
+  color: #8f7314;
+  display: grid;
+  place-items: center;
+}
+
+.dash-stat span {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+
+.dash-stat strong {
+  display: block;
+  font-size: 1.6rem;
+  margin-top: 2px;
+}
+
+/* Layout */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.dash-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Next up */
+.dash-next {
+  background: var(--sidebar);
+  color: #fff;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.dash-next span {
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+
+.dash-next h2 {
+  color: #fff;
+  font-size: 1.4rem;
+  margin: 6px 0 4px;
+}
+
+.dash-next p {
+  margin: 0;
+  color: #b8b8bd;
+  font-size: 0.92rem;
+}
+
+/* Lists */
+.dash-list,
+.dash-team {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dash-list li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.dash-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.dash-list li:first-child {
+  padding-top: 0;
+}
+
+.dash-time {
+  width: 84px;
+  flex-shrink: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.dash-time small {
+  display: block;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.dash-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.dash-info strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.dash-info span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.dash-price {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Badges */
+.dash-badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.dash-badge--booked {
+  background: var(--gold-soft);
+  color: #8f7314;
+}
+
+.dash-badge--completed {
+  background: rgba(46, 160, 100, 0.13);
+  color: #1f8a52;
+}
+
+.dash-pill {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.dash-pill.open {
+  background: rgba(46, 160, 100, 0.13);
+  color: #1f8a52 !important;
+}
+
+.dash-pill.closed {
+  background: rgba(224, 85, 85, 0.12);
+  color: var(--danger) !important;
+}
+
+/* Shop hours */
+.dash-hours {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.dash-hours span {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Team */
+.dash-team li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.dash-avatar {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--sidebar);
+  color: var(--gold);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+/* Empty state */
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 0 6px;
+  color: var(--muted);
+}
+
+.dash-empty p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .dash-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .dash-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-time {
+    width: 70px;
+  }
+}

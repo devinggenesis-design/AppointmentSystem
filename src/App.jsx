@@ -1,19 +1,28 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// Admin
 import AdminLayout from "./layouts/AdminLayout";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import Appointments from "./pages/admin/Appointments";
 import Schedules from "./pages/admin/Schedules";
 import Account from "./pages/admin/Account";
-import ProtectedRoute from "./components/common/ProtectedRoute";
-import "./data/appointmentStore";
+
+import Homepage from "./pages/customer/Homepage";
+import Services from "./pages/customer/Services";
+import Booking from "./pages/customer/Booking";
+import Contacts from "./pages/customer/Contacts";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/booking" element={<Booking />} />
+        <Route path="/contacts" element={<Contacts />} />
+
+        <Route path="/login" element={<Navigate to="/admin/login" replace />} />
         <Route path="/admin/login" element={<Login />} />
 
         <Route element={<ProtectedRoute />}>
@@ -25,6 +34,8 @@ function App() {
             <Route path="account" element={<Account />} />
           </Route>
         </Route>
+
+        <Route path="*" element={<h1>Page not found</h1>} />
       </Routes>
     </BrowserRouter>
   );
