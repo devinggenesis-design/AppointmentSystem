@@ -1,0 +1,145 @@
+.cnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 15, 16, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #2c2c30;
+}
+
+.cnav__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 68px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cnav__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #f2f0eb;
+  text-decoration: none;
+}
+
+.cnav__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #d4af37;
+  color: #161616;
+  display: grid;
+  place-items: center;
+}
+
+.cnav__menu {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.cnav__menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cnav__menu a:not(.cnav__book) {
+  display: block;
+  padding: 9px 16px;
+  border-radius: 8px;
+  color: #9a9aa2;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+
+.cnav__menu a:not(.cnav__book):hover {
+  color: #f2f0eb;
+  background: #1c1c1f;
+}
+
+.cnav__menu a.active {
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.14);
+  font-weight: 600;
+}
+
+.cnav__book {
+  background: #d4af37;
+  color: #161616;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: filter 0.2s;
+}
+
+.cnav__book:hover {
+  filter: brightness(0.92);
+}
+
+.cnav__toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #f2f0eb;
+  cursor: pointer;
+  padding: 4px;
+}
+
+@media (max-width: 768px) {
+  .cnav__inner {
+    padding: 0 16px;
+  }
+
+  .cnav__toggle {
+    display: grid;
+    place-items: center;
+  }
+
+  .cnav__menu {
+    display: none;
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px;
+    background: #0f0f10;
+    border-bottom: 1px solid #2c2c30;
+  }
+
+  .cnav__menu.open {
+    display: flex;
+  }
+
+  .cnav__menu ul {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cnav__menu a:not(.cnav__book) {
+    padding: 13px 14px;
+  }
+
+  .cnav__book {
+    text-align: center;
+    padding: 14px;
+  }
+}
