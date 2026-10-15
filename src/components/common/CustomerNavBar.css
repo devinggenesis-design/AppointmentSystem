@@ -29,13 +29,20 @@
 }
 
 .cnav__logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: #d4af37;
-  color: #161616;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f0f0f;
   display: grid;
   place-items: center;
+}
+
+.cnav__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: lighten;
 }
 
 .cnav__menu {

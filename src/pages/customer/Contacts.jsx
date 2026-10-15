@@ -6,12 +6,12 @@ const details = [
   {
     icon: MapPin,
     label: "Address",
-    value: "123 Kamuning Road, Quezon City",
+    value: "SM Mall of Asia, Ground Floor, Bay City, Pasay City",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "0917 123 4567",
+    value: "(02) 8444-1111",
     href: "tel:+639171234567",
   },
   {
@@ -23,7 +23,7 @@ const details = [
   {
     icon: Clock,
     label: "Hours",
-    value: "Daily, 10:00 AM to 8:00 PM",
+    value: "Daily, 10:00 AM to 10:00 PM (Mon-Sun)",
   },
 ];
 

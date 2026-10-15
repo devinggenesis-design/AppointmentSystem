@@ -38,7 +38,7 @@ router.get("/slots", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { name, phone, service, price, date, time } = req.body;
+    const { name, phone, service, subService, price, date, time } = req.body;
 
     if (!name?.trim() || !phone?.trim() || !service) {
       return res
@@ -66,6 +66,7 @@ router.post("/", async (req, res) => {
       customerName: name.trim(),
       phone: phone.trim(),
       serviceName: service,
+      subServiceName: subService || "",
       totalPrice: Number(price) || 0,
       bookingDate: date,
       bookingTime: to12h(time),

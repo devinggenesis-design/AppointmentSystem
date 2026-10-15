@@ -54,7 +54,7 @@ function Login() {
           <Scissors size={26} />
         </div>
 
-        <h1 className="login-title">Barbershop</h1>
+        <h1 className="login-title">Gentleman's Barbershop</h1>
         <p className="login-subtitle">Sign in to manage appointments</p>
 
         {error && <div className="login-error">{error}</div>}

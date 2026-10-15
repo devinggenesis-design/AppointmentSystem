@@ -1,23 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap");
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  --bg: #f4f2ee;
-  --surface: #ffffff;
-  --text: #1c1c1e;
-  --muted: #7a7a80;
-  --border: #e6e2da;
+  --bg-dark: #0f0f0f;
+  --surface: #1a1a1a;
+  --border: #2a2a2a;
+  --text-muted: #999999;
+  --text-white: #ffffff;
+  --cream: #f7f0e0;
+  --gold: #d4a853;
+  --gold-dark: #b8892e;
+  --gold-darker: #9f7a26;
+  --gold-bg: rgba(212, 168, 83, 0.12);
+  --profile-bg: #2a1f08;
 
-  --sidebar: #161616;
-  --sidebar-hover: #232323;
+  --bg: var(--bg-dark);
+  --text: var(--text-white);
+  --muted: var(--text-muted);
+  --gold-soft: var(--gold-bg);
+  --danger: #f06b6b;
+  --success: #4cc38a;
+
+  --sidebar: #0f0f0f;
+  --sidebar-hover: #1a1a1a;
   --sidebar-border: #2a2a2a;
-  --sidebar-text: #a8a8ad;
-
-  --gold: #c9a227;
-  --gold-soft: rgba(201, 162, 39, 0.14);
-  --danger: #e05555;
-
+  --sidebar-text: #999999;
   --sidebar-w: 260px;
 }
 
@@ -35,8 +43,8 @@ body {
     -apple-system,
     "Segoe UI",
     sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg-dark);
+  color: var(--text-white);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -44,7 +52,7 @@ h1,
 h2,
 h3 {
   margin: 0 0 12px;
-  color: var(--text);
+  color: var(--text-white);
   letter-spacing: -0.01em;
 }
 
@@ -53,4 +61,61 @@ input,
 select,
 textarea {
   font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #777777;
+}
+
+/* ---------- Palette overrides ---------- */
+
+/* Gold gradient on every main call-to-action button */
+.cnav__book,
+.home-btn:not(.home-btn--ghost),
+.sv-btn,
+.booking-btn:not(.booking-btn--ghost),
+.ct-btn,
+.login-submit,
+.sched-btn--primary,
+.sched-btn--gold,
+.acct-btn--primary,
+.modal-btn--primary {
+  background: linear-gradient(#d4a853, #9f7a26) !important;
+  color: #0f0f0f;
+}
+
+/* Inputs sit darker than the cards they're on */
+.login-input,
+.acct-input,
+.appts-search,
+.appts-date,
+.sched-page input[type="text"],
+.sched-page input[type="date"],
+.sched-page input[type="time"],
+.sched-page select {
+  background: var(--bg-dark) !important;
+}
+
+/* Avatars use the profile color */
+.admin-sidebar__avatar,
+.acct-avatar,
+.dash-avatar,
+.sched-emp__avatar {
+  background: var(--profile-bg) !important;
+}
+
+/* "Next up" card needs an outline on a dark page */
+.dash-next {
+  background: var(--gold-bg) !important;
+  border: 1px solid var(--border);
+}
+
+/* Cream page titles */
+.home-hero h1,
+.booking-hero h1,
+.sv-hero h1,
+.ct-hero h1,
+.login-title {
+  color: var(--cream) !important;
 }

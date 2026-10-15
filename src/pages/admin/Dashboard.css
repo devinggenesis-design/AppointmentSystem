@@ -1,7 +1,13 @@
+/* Make the content pane (the element that wraps .dash-page) white.
+   The sidebar is a separate element, so it is not affected. */
+:has(> .dash-page) {
+  background: #ffffff;
+}
+
 .dash-page {
   --surface: #ffffff;
   --text: #1c1c1e;
-  --muted: #7a7a80;
+  --muted: #6b6b72;
   --border: #e6e2da;
   --gold: #c9a227;
   --gold-soft: rgba(201, 162, 39, 0.14);
@@ -9,6 +15,8 @@
   --sidebar: #161616;
 
   width: 100%;
+  min-height: 100%;
+  background: #ffffff;
   color: var(--text);
   color-scheme: light;
 }
@@ -82,12 +90,13 @@
   margin-bottom: 16px;
 }
 
-/* Cards */
+/* Cards (soft shadow so they stand out on the white background) */
 .dash-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 22px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .dash-center {
@@ -183,15 +192,15 @@
   color: var(--gold);
 }
 
-.dash-next h2 {
-  color: #fff;
+.dash-page .dash-next h2 {
+  color: #1c1c1e;
   font-size: 1.4rem;
   margin: 6px 0 4px;
 }
 
-.dash-next p {
+.dash-page .dash-next p {
   margin: 0;
-  color: #b8b8bd;
+  color: #3a3a3f;
   font-size: 0.92rem;
 }
 

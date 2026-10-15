@@ -57,7 +57,7 @@ function AdminNavbar() {
         >
           <Menu size={22} />
         </button>
-        <span className="admin-topbar__title">Barbershop</span>
+        <span className="admin-topbar__title">Gentleman's Barbershop</span>
       </header>
 
       {open && <div className="admin-overlay" onClick={() => setOpen(false)} />}
@@ -68,7 +68,7 @@ function AdminNavbar() {
             <Scissors size={20} />
           </div>
           <div>
-            <div className="admin-sidebar__name">Barbershop</div>
+            <div className="admin-sidebar__name">Gentleman's Barbershop</div>
             <div className="admin-sidebar__role">Admin Panel</div>
           </div>
           <button
@@ -111,7 +111,7 @@ function AdminNavbar() {
             </div>
           </div>
           <div className="admin-sidebar__name">
-            {admin.shopName || "Barbershop"}
+            {admin.shopName || "Gentleman's Barbershop"}
           </div>
           <button
             className="admin-sidebar__logout"

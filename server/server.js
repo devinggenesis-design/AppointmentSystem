@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import scheduleRoutes from "./routes/schedule.js";
 import serviceRoutes from "./routes/services.js";
+import productRoutes from "./routes/products.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, ".env") });
@@ -24,7 +25,7 @@ app.use("/api/appointments", appointmentRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/schedule", scheduleRoutes);
 app.use("/api/services", serviceRoutes);
-
+app.use("/api/products", productRoutes);
 const PORT = process.env.PORT || 5000;
 
 connectDB().then(() => {

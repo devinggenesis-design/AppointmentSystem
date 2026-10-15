@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   Check,
   CalendarDays,
   Clock,
   Scissors,
+  Tag,
   User,
   Phone,
 } from "lucide-react";
@@ -19,7 +21,14 @@ for (let h = 10; h < 20; h++) {
   );
 }
 
-const initial = { service: "", date: "", time: "", name: "", phone: "" };
+const initial = {
+  service: "",
+  option: "",
+  date: "",
+  time: "",
+  name: "",
+  phone: "",
+};
 
 const localISO = (d = new Date()) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
@@ -47,6 +56,7 @@ const formatDate = (iso) =>
 export default function Booking() {
   "use no memo";
 
+  const [searchParams] = useSearchParams();
   const { services, loading } = useServices();
   const [form, setForm] = useState(initial);
   const [booked, setBooked] = useState(null);
@@ -58,6 +68,34 @@ export default function Booking() {
   const now = new Date();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
   const selectedService = services.find((s) => s.id === form.service);
+
+  const options = !selectedService
+    ? []
+    : (selectedService.subServices || []).length > 0
+      ? selectedService.subServices.map((o) => ({
+          key: o.id,
+          name: o.name,
+          price: o.price,
+          duration: o.durationMinutes,
+        }))
+      : (selectedService.priceTiers || []).map((t) => ({
+          key: t.label,
+          name: t.label,
+          price: t.price,
+          duration: null,
+        }));
+
+  const selectedOption = options.find((o) => o.key === form.option);
+  const total = selectedOption ? selectedOption.price : selectedService?.price;
+  const hasOptions = (s) =>
+    (s.subServices || []).length > 0 || (s.priceTiers || []).length > 0;
+
+  useEffect(() => {
+    const id = searchParams.get("service");
+    if (id && services.some((s) => s.id === id)) {
+      setForm((prev) => (prev.service ? prev : { ...prev, service: id }));
+    }
+  }, [services, searchParams]);
 
   const loadTaken = async (date) => {
     if (!date) {
@@ -82,6 +120,7 @@ export default function Booking() {
       ...prev,
       [name]: value,
       ...(name === "date" ? { time: "" } : {}),
+      ...(name === "service" ? { option: "" } : {}),
     }));
   };
 
@@ -96,6 +135,8 @@ export default function Booking() {
     e.preventDefault();
 
     if (!selectedService) return setError("Please choose a service.");
+    if (options.length > 0 && !selectedOption)
+      return setError("Please choose an option.");
     if (!form.date) return setError("Please choose a date.");
     if (!form.time) return setError("Please choose a time.");
 
@@ -108,7 +149,8 @@ export default function Booking() {
           name: form.name.trim(),
           phone: form.phone.trim(),
           service: selectedService.name,
-          price: selectedService.price,
+          subService: selectedOption ? selectedOption.name : "",
+          price: total,
           date: form.date,
           time: form.time,
         }),
@@ -199,10 +241,36 @@ export default function Booking() {
                   aria-pressed={form.service === s.id}
                 >
                   <strong>{s.name}</strong>
-                  <span>{peso(s.price)}</span>
+                  <span>
+                    {hasOptions(s) ? "from " : ""}
+                    {peso(s.price)}
+                  </span>
                 </button>
               ))}
             </div>
+
+            {options.length > 0 && (
+              <div className="booking-options">
+                <span className="booking-options__title">
+                  {(selectedService.subServices || []).length > 0
+                    ? "Choose an option"
+                    : "Choose your hair length"}
+                </span>
+                {options.map((o) => (
+                  <button
+                    type="button"
+                    key={o.key}
+                    className={`booking-option ${form.option === o.key ? "active" : ""}`}
+                    onClick={() => setField("option", o.key)}
+                    aria-pressed={form.option === o.key}
+                  >
+                    <span>{o.name}</span>
+                    {o.duration ? <em>{o.duration}m</em> : null}
+                    <strong>{peso(o.price)}</strong>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="booking-step">
@@ -307,6 +375,17 @@ export default function Booking() {
                 </strong>
               </div>
             </li>
+            {options.length > 0 && (
+              <li>
+                <Tag size={18} />
+                <div>
+                  <span>Option</span>
+                  <strong>
+                    {selectedOption ? selectedOption.name : "Not selected"}
+                  </strong>
+                </div>
+              </li>
+            )}
             <li>
               <CalendarDays size={18} />
               <div>
@@ -344,7 +423,7 @@ export default function Booking() {
           <div className="booking-total">
             <span>Total</span>
             <strong>
-              {selectedService ? peso(selectedService.price) : "—"}
+              {selectedService && total != null ? peso(total) : "—"}
             </strong>
           </div>
         </aside>

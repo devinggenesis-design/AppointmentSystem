@@ -1,8 +1,14 @@
+/* Make the content pane (the element that wraps .account-page) white.
+   The sidebar is a separate element, so it is not affected. */
+:has(> .account-page) {
+  background: #ffffff;
+}
+
 .account-page {
   --bg: #f4f2ee;
   --surface: #ffffff;
   --text: #1c1c1e;
-  --muted: #7a7a80;
+  --muted: #6b6b72;
   --border: #e6e2da;
   --gold: #c9a227;
   --gold-soft: rgba(201, 162, 39, 0.14);
@@ -10,10 +16,13 @@
   --sidebar: #161616;
 
   width: 100%;
+  min-height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   align-items: start;
+  align-content: start;
+  background: #ffffff;
   color: var(--text);
   color-scheme: light;
 }
@@ -45,12 +54,14 @@
   color: var(--muted);
 }
 
+/* Cards (soft shadow so they stand out on the white background) */
 .acct-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 24px;
   margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .acct-card__head {
@@ -124,11 +135,12 @@
   color: var(--text);
 }
 
-.acct-input {
+/* Input boxes: white, black text (high specificity so global dark styles can't override) */
+.account-page .acct-input {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #ffffff;
+  background: #ffffff !important;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0 14px;
@@ -143,19 +155,27 @@
   box-shadow: 0 0 0 3px var(--gold-soft);
 }
 
-.acct-input input {
+.account-page .acct-input input {
   flex: 1;
   min-width: 0;
   border: none;
   outline: none;
-  background: transparent;
+  background: transparent !important;
   padding: 12px 0;
   font-size: 0.93rem;
-  color: #1c1c1e;
+  color: #000000 !important;
+  caret-color: #000000;
 }
 
-.acct-input input::placeholder {
-  color: #a3a3a8;
+.account-page .acct-input input::placeholder {
+  color: #8a8a90;
+  opacity: 1;
+}
+
+/* Stops the browser's autofill from turning the field dark or blue */
+.account-page .acct-input input:-webkit-autofill {
+  -webkit-text-fill-color: #000000;
+  box-shadow: 0 0 0 1000px #ffffff inset;
 }
 
 .acct-eye {
@@ -265,6 +285,12 @@
 .acct-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .account-page {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {

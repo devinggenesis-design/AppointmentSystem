@@ -13,6 +13,7 @@ import Homepage from "./pages/customer/Homepage";
 import Services from "./pages/customer/Services";
 import Booking from "./pages/customer/Booking";
 import Contacts from "./pages/customer/Contacts";
+import Products from "./pages/customer/Products";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/contacts" element={<Contacts />} />
+          <Route path="/products" element={<Products />} />
         </Route>
 
         <Route path="/login" element={<Navigate to="/admin/login" replace />} />

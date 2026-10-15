@@ -1,14 +1,22 @@
+/* Make the content pane (the element that wraps .appts-page) white.
+   The sidebar is a separate element, so it is not affected. */
+:has(> .appts-page) {
+  background: #ffffff;
+}
+
 .appts-page {
   --bg: #f4f2ee;
   --surface: #ffffff;
   --text: #1c1c1e;
-  --muted: #7a7a80;
+  --muted: #6b6b72;
   --border: #e6e2da;
   --gold: #c9a227;
   --gold-soft: rgba(201, 162, 39, 0.14);
   --danger: #e05555;
   --sidebar: #161616;
 
+  min-height: 100%;
+  background: #ffffff;
   color: var(--text);
   color-scheme: light;
 }
@@ -27,8 +35,27 @@
   background: #ffffff;
 }
 
-.appts-search input {
-  background: transparent;
+/* Search bar: white box, black text (high specificity so global styles can't override) */
+.appts-page .appts-search {
+  background: #ffffff !important;
+  border: 1px solid var(--border);
+  color: #6b6b72;
+}
+
+.appts-page .appts-search input {
+  background: transparent !important;
+  color: #000000 !important;
+  caret-color: #000000;
+}
+
+.appts-page .appts-search input::placeholder {
+  color: #8a8a90;
+  opacity: 1;
+}
+
+.appts-page .appts-date {
+  background: #ffffff !important;
+  color: #000000 !important;
 }
 
 .appts-page .appt-phone,
@@ -64,6 +91,7 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .appts-stat span {

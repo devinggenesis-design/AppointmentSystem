@@ -1,0 +1,31 @@
+import {
+  Scissors,
+  Sparkles,
+  Smile,
+  PersonStanding,
+  Brush,
+  Hand,
+  Droplets,
+  ScanFace,
+  Palette,
+  Flower2,
+  Ear,
+  Award,
+  Heart,
+} from "lucide-react";
+
+export default {
+  scissors: Scissors,
+  sparkles: Sparkles,
+  smile: Smile,
+  person: PersonStanding,
+  brush: Brush,
+  hand: Hand,
+  droplets: Droplets,
+  scanface: ScanFace,
+  palette: Palette,
+  flower: Flower2,
+  ear: Ear,
+  award: Award,
+  heart: Heart,
+};

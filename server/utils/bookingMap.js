@@ -34,7 +34,9 @@ export const toClient = (b) => ({
   _id: b._id,
   name: b.customerName,
   phone: b.phone,
-  service: b.serviceName,
+  service: b.subServiceName
+    ? `${b.serviceName} - ${b.subServiceName}`
+    : b.serviceName,
   price: b.totalPrice,
   date: String(b.bookingDate).slice(0, 10),
   time: to24h(b.bookingTime),

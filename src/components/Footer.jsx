@@ -22,6 +22,7 @@ export default function Footer() {
           <h3>Pages</h3>
           <Link to="/">Home</Link>
           <Link to="/services">Services</Link>
+          <Link to="/products">Products</Link>
           <Link to="/booking">Book Now</Link>
           <Link to="/contacts">Contacts</Link>
         </nav>

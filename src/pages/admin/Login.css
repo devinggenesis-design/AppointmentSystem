@@ -1,13 +1,14 @@
-/* Dark background only */
+/* White page background */
 .login-page {
   min-height: 100vh;
   display: grid;
   place-items: center;
   padding: 16px;
-  background: #0f0f10;
+  background: #ffffff;
+  color-scheme: light;
 }
 
-/* Light card */
+/* Card: lighter shadow and a visible border so it stands out on white */
 .login-card {
   width: 100%;
   max-width: 400px;
@@ -15,7 +16,7 @@
   border: 1px solid #e6e2da;
   border-radius: 18px;
   padding: 40px 32px 32px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   color: #1c1c1e;
 }
 
@@ -30,18 +31,18 @@
   place-items: center;
 }
 
-.login-title {
+.login-page .login-title {
   text-align: center;
   font-family: "Playfair Display", Georgia, serif;
   font-size: 1.8rem;
   margin: 0 0 4px;
-  color: #1c1c1e;
+  color: #000000 !important;
 }
 
 .login-subtitle {
   text-align: center;
   margin: 0 0 24px;
-  color: #7a7a80;
+  color: #6b6b72;
   font-size: 0.92rem;
 }
 
@@ -68,15 +69,16 @@
   color: #1c1c1e;
 }
 
-.login-input {
+/* Input boxes: white, black text (high specificity so global dark styles can't override) */
+.login-page .login-input {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #ffffff;
+  background: #ffffff !important;
   border: 1px solid #e6e2da;
   border-radius: 10px;
   padding: 0 14px;
-  color: #7a7a80;
+  color: #6b6b72;
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
@@ -87,18 +89,27 @@
   box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.14);
 }
 
-.login-input input {
+.login-page .login-input input {
   flex: 1;
+  min-width: 0;
   border: none;
   outline: none;
-  background: transparent;
+  background: transparent !important;
   padding: 13px 0;
   font-size: 0.95rem;
-  color: #1c1c1e;
+  color: #000000 !important;
+  caret-color: #000000;
 }
 
-.login-input input::placeholder {
-  color: #9a9aa0;
+.login-page .login-input input::placeholder {
+  color: #8a8a90;
+  opacity: 1;
+}
+
+/* Stops the browser's saved-password autofill from turning the field dark or blue */
+.login-page .login-input input:-webkit-autofill {
+  -webkit-text-fill-color: #000000;
+  box-shadow: 0 0 0 1000px #ffffff inset;
 }
 
 .login-eye {
@@ -106,7 +117,7 @@
   place-items: center;
   background: none;
   border: none;
-  color: #7a7a80;
+  color: #6b6b72;
   cursor: pointer;
   padding: 0;
 }
@@ -131,10 +142,15 @@
     transform 0.1s;
 }
 
-.login-submit:hover {
+.login-submit:hover:not(:disabled) {
   filter: brightness(0.95);
 }
 
-.login-submit:active {
+.login-submit:active:not(:disabled) {
   transform: scale(0.99);
+}
+
+.login-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
