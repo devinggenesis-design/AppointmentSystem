@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
-import "./AdminNavbar.css";
+import "../components/admin/AdminNavBar.css";
 
 const links = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
